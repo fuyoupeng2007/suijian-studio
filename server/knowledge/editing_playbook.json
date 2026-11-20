@@ -1,0 +1,164 @@
+{
+  "version": "1.0",
+  "purpose": "随剪内置影片规划与短视频剪辑规则；不是模型训练，也不是下载即具备审美的模型权重",
+  "workflow": [
+    "检查每份素材的覆盖与不确定性",
+    "提取人物/物体/场景和带时间的事件",
+    "区分已观察事实与可能的联系",
+    "规划开场、发展、重点与收尾",
+    "为每次切换说明剪辑动机",
+    "执行白名单效果并核对输出"
+  ],
+  "principles": [
+    "不凭文件名、抽帧顺序或相似外貌编造真实时间、地点、人物身份和因果。",
+    "同主题不等于同一事件；证据不足时使用可能联系或明确无明显联系。",
+    "镜头衔接优先服务内容、动作方向、景别与节奏。只有观测到动作才能提出动作匹配，不能把采样点推断当连续动作事实。",
+    "默认以直接切换为主。柔和段落可短叠化，时间/章节跨度可淡黑，方向连贯时可使用平移或擦除。",
+    "连续堆叠不同转场会削弱叙事。通常只选择1到2种主要转场，非cut比例不宜超过边界的一半；用户明确要求特效展示时可提高但仍需解释。",
+    "照片可做轻推近/拉远；最大约6%的中心画面裁切必须在方案中说明。视频默认不额外裁切主体。",
+    "统一影调应温和，默认natural。用户希望温暖/柔和/黑白时再选warm/soft/bw；不宣称实现专业自动色彩匹配。",
+    "转场时间重叠会缩短实际片长；规划目标时长时必须计入。字幕在交界切换，不让两段字幕同时覆盖。",
+    "未分析音轨时不能声称按音乐节拍卡点、识别对白、J-cut或L-cut已实施。保留原声依据用户要求。",
+    "保留未请求修改的镜头、顺序、字幕与音量；可撤销并让用户核对依据。"
+  ],
+  "styles": {
+    "natural": {
+      "intent": "生活记录、旅行纪实",
+      "pace": "2到5秒为常见起点，依内容调整",
+      "transitions": [
+        "cut",
+        "dissolve"
+      ],
+      "look": "natural"
+    },
+    "warm_memory": {
+      "intent": "朋友、毕业、家庭回忆",
+      "pace": "留出情绪与原声的停顿",
+      "transitions": [
+        "cut",
+        "dissolve",
+        "fadeblack"
+      ],
+      "look": "warm"
+    },
+    "energetic": {
+      "intent": "节奏鲜明的探店、出游、兴趣展示",
+      "pace": "更短的镜头与明确的视觉重点",
+      "transitions": [
+        "cut",
+        "slideleft",
+        "wipeleft"
+      ],
+      "look": "natural",
+      "warning": "没有节拍分析时仅为快节奏，不能称音乐卡点"
+    },
+    "minimal": {
+      "intent": "简洁、克制、有空间感",
+      "pace": "少镜头，清楚开场与收尾",
+      "transitions": [
+        "cut",
+        "fadeblack"
+      ],
+      "look": "soft"
+    }
+  },
+  "executable": {
+    "transition": [
+      "cut",
+      "dissolve",
+      "fadeblack",
+      "wipeleft",
+      "wiperight",
+      "slideleft",
+      "slideright",
+      "circleopen"
+    ],
+    "look": [
+      "natural",
+      "warm",
+      "soft",
+      "bw"
+    ],
+    "motion": [
+      "none",
+      "push_in",
+      "pull_out"
+    ]
+  },
+  "studied_not_implemented": [
+    "基于真实动作的match cut",
+    "连续光流与甩镜模糊衔接",
+    "音乐节拍检测与变速卡点",
+    "J-cut/L-cut音画错位",
+    "遮挡/抠像转场",
+    "GL shader复杂转场",
+    "完整对白与声音事件理解"
+  ],
+  "references": [
+    {
+      "name": "PySceneDetect",
+      "url": "https://github.com/Breakthrough/PySceneDetect",
+      "license": "BSD-3-Clause",
+      "use": "参考时序切镜与自适应采样思路；没有整库引入"
+    },
+    {
+      "name": "FFmpeg filters",
+      "url": "https://github.com/FFmpeg/FFmpeg/blob/master/doc/filters.texi",
+      "use": "内置xfade/acrossfade/zoompan/eq，使用本机已有FFmpeg执行"
+    },
+    {
+      "name": "Remotion agent-plugin",
+      "url": "https://github.com/remotion-dev/agent-plugin",
+      "license": "MIT for plugin; engine separate license",
+      "use": "只读研究剪辑/动效规则；未引入Remotion运行库"
+    },
+    {
+      "name": "gl-transitions",
+      "url": "https://github.com/gl-transitions/gl-transitions",
+      "license": "MIT by default, individual shader notices vary",
+      "use": "只读研究转场类别；未打包shader"
+    },
+    {
+      "name": "TikTok Behind the Camera",
+      "url": "https://ads.tiktok.com/business/en-US/blog/behind-the-camera-shooting-tips-and-transitions-to-make-your-tiktoks?redirected=1",
+      "use": "研究前景遮挡、换装、揭示等拍摄与剪接配合的前提；未下载模板或复制素材"
+    },
+    {
+      "name": "CapCut match cut guide",
+      "url": "https://www.capcut.com/features/how-to-make-a-match-cut-capcut-workflow",
+      "use": "参考形状、位置、动作与构图匹配的检查方法；未调用剪映接口"
+    }
+  ],
+  "short_video_patterns": [
+    {
+      "name": "画面匹配直切",
+      "intent": "用相近形状、主体位置或构图连接不同片段",
+      "requirements": "先核对接点两侧画面；采样仅支持候选判断，不保证精确动作匹配",
+      "status": "可规划直切；尚无自动对位或动作接点精修"
+    },
+    {
+      "name": "遮挡揭示与换装",
+      "intent": "前景物体或手遮住镜头，再揭示下一场景",
+      "requirements": "需要原素材中真实遮挡与兼容机位；不能靠叠化声称完成抠像或补拍",
+      "status": "已研究，未提供遮挡检测/抠像执行"
+    },
+    {
+      "name": "同向切换",
+      "intent": "同一方向的视觉切换维持节奏",
+      "requirements": "只有证据支持方向时才能提出方向连贯；不足时按风格使用通用短转场",
+      "status": "可执行左右平移或擦除；不是连续光流甩镜"
+    },
+    {
+      "name": "动态转照片",
+      "intent": "把动作观察转为静态回忆，用短叠化和轻推拉停留",
+      "requirements": "照片与视频有内容或构图依据；说明静态帧不证明真实拍摄先后",
+      "status": "已执行：短叠化＋照片推近/拉远"
+    },
+    {
+      "name": "节奏直切",
+      "intent": "以更短镜头和清楚的视觉重点组织快节奏片段",
+      "requirements": "用户目标与可见动作支持短切；音乐节拍须有独立音频分析",
+      "status": "可按秒剪切；不声称音乐卡点"
+    }
+  ]
+}
